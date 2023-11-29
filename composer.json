@@ -1,9 +1,9 @@
 {
     "name": "predis/predis",
     "type": "library",
-    "description": "A flexible and feature-complete Redis client for PHP.",
+    "description": "A flexible and feature-complete Redis client for PHP. (tls support Sentinel+Redis)",
     "keywords": ["nosql", "redis", "predis"],
-    "homepage": "http://github.com/predis/predis",
+    "homepage": "http://github.com/Denisok94/predis",
     "license": "MIT",
     "support": {
         "issues": "https://github.com/predis/predis/issues"

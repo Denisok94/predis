@@ -392,11 +392,11 @@ class SentinelReplication implements ReplicationInterface
             $this->handleSentinelErrorResponse($sentinel, $payload);
         }
 
-        return [
+        return $this->setParameters($sentinel, [
             'host' => $payload[0],
             'port' => $payload[1],
             'role' => 'master',
-        ];
+        ]);
     }
 
     /**
@@ -426,14 +426,30 @@ class SentinelReplication implements ReplicationInterface
                 continue;
             }
 
-            $slaves[] = [
+            $slaves[] = $this->setParameters($sentinel, [
                 'host' => $slave[3],
                 'port' => $slave[5],
                 'role' => 'slave',
-            ];
+            ]);
         }
 
         return $slaves;
+    }
+
+    /**
+     *
+     * @param NodeConnectionInterface $sentinel
+     * @param array $payload
+     * @return array
+     */
+    protected function setParameters(NodeConnectionInterface $sentinel, array $payload): array
+    {
+        $parameters = $sentinel->getParameters();
+        $payload['scheme'] = $parameters->scheme;
+        if ($parameters->ssl) {
+            $payload['ssl'] = $parameters->ssl;
+        }
+        return $payload;
     }
 
     /**

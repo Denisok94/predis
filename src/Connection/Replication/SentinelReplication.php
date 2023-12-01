@@ -298,9 +298,14 @@ class SentinelReplication implements ReplicationInterface
     public function getSentinelConnection()
     {
         if (!$this->sentinelConnection) {
-            // error_log(print_r([$this->sentinelIndex, count($this->sentinels)], true));
             if ($this->sentinelIndex >= count($this->sentinels)) {
                 $this->sentinelIndex = 0;
+                $parameters = count($this->sentinels) > 0 ? $this->sentinels[count($this->sentinels) - 1] : null;
+                if ($parameters) {
+                    error_log(json_encode(["level" => 400, "level_name" => "ERROR", 'message' => [$parameters->host, $parameters->port, $parameters->scheme]]));
+                } else {
+                    error_log(json_encode([$this->sentinelIndex, count($this->sentinels)]));
+                }
                 throw new \Predis\ClientException('No sentinel server available for autodiscovery.');
             }
 
@@ -366,7 +371,8 @@ class SentinelReplication implements ReplicationInterface
      */
     private function handleSentinelErrorResponse(NodeConnectionInterface $sentinel, ErrorResponseInterface $error)
     {
-        // error_log(print_r($sentinel, true));
+        $parameters = $sentinel->getParameters();
+        error_log(json_encode(["level" => 400, "level_name" => "ERROR", 'message' => [$parameters->host, $parameters->port, $parameters->scheme]]));
         if ($error->getErrorType() === 'IDONTKNOW') {
             throw new ConnectionException($sentinel, $error->getMessage());
         } else {

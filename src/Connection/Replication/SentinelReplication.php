@@ -283,7 +283,7 @@ class SentinelReplication implements ReplicationInterface
                 $parameters['timeout'] = $this->sentinelTimeout;
             }
         }
-        error_log(print_r($parameters, true));
+        // error_log(print_r($parameters, true));
 
         return $this->connectionFactory->create($parameters);
     }
@@ -298,7 +298,7 @@ class SentinelReplication implements ReplicationInterface
     public function getSentinelConnection()
     {
         if (!$this->sentinelConnection) {
-            error_log(print_r([$this->sentinelIndex, count($this->sentinels)], true));
+            // error_log(print_r([$this->sentinelIndex, count($this->sentinels)], true));
             if ($this->sentinelIndex >= count($this->sentinels)) {
                 $this->sentinelIndex = 0;
                 throw new \Predis\ClientException('No sentinel server available for autodiscovery.');
@@ -307,7 +307,7 @@ class SentinelReplication implements ReplicationInterface
             $sentinel = $this->sentinels[$this->sentinelIndex];
             ++$this->sentinelIndex;
             $this->sentinelConnection = $this->createSentinelConnection($sentinel);
-            error_log(print_r($this->sentinelConnection, true));
+            // error_log(print_r($this->sentinelConnection, true));
         }
 
         return $this->sentinelConnection;
@@ -366,7 +366,7 @@ class SentinelReplication implements ReplicationInterface
      */
     private function handleSentinelErrorResponse(NodeConnectionInterface $sentinel, ErrorResponseInterface $error)
     {
-        error_log(print_r($sentinel, true));
+        // error_log(print_r($sentinel, true));
         if ($error->getErrorType() === 'IDONTKNOW') {
             throw new ConnectionException($sentinel, $error->getMessage());
         } else {

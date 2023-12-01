@@ -363,6 +363,7 @@ class SentinelReplication implements ReplicationInterface
      */
     private function handleSentinelErrorResponse(NodeConnectionInterface $sentinel, ErrorResponseInterface $error)
     {
+        error_log(print_r($sentinel, true));
         if ($error->getErrorType() === 'IDONTKNOW') {
             throw new ConnectionException($sentinel, $error->getMessage());
         } else {
